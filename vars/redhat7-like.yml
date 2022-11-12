@@ -1,0 +1,12 @@
+---
+time_backend_default: chrony
+time_backend_default_fallback: ntp
+time_backends:
+  chrony:
+    config: /etc/chrony.conf
+    package: chrony
+    service: chronyd
+  ntp:
+    config: /etc/ntp.conf
+    package: ntp
+    service: ntpd

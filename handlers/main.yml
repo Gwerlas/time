@@ -1,0 +1,8 @@
+---
+- name: Time service restart
+  listen:
+    - service restart
+  become: true
+  ansible.builtin.service:
+    name: "{{ time_service }}"
+    state: restarted

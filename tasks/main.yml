@@ -1,0 +1,31 @@
+---
+- name: Load context
+  ansible.builtin.include_tasks: load.yml
+
+- name: Backend
+  vars:
+    name: "{{ time_backend_name | default(time_backend_default) }}"
+    fallback: "{{ time_backend_fallback | default(time_backend_default_fallback | default('chrony')) }}"
+  block:
+    - name: Check the backend
+      when: name not in time_backends
+      ansible.builtin.fail:
+        msg: "No such backend: {{ name }}"
+
+    - name: Apply
+      ansible.builtin.include_tasks: apply.yml
+      vars:
+        time_backend: "{{ time_backends[name] }}"
+
+  rescue:
+    - name: Fallback
+      when: name != fallback
+      ansible.builtin.include_tasks: apply.yml
+      vars:
+        time_backend: "{{ time_backends[fallback] }}"
+
+  always:
+    - name: Display backend data
+      ansible.builtin.debug:
+        var: time_backends[name]
+        verbosity: 1

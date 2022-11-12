@@ -1,0 +1,45 @@
+# {{ ansible_managed }}
+
+driftfile {{ time_ntpd_driftfile }}
+
+restrict default {{ time_ntpd_restrict_defaults | join(' ') }}
+
+{% for restrict in time_ntpd_restricts %}
+restrict {{ restrict.ip }}{% if restrict.netmask is defined %} mask {{ restrict.netmask }}{% endif %}{% if restrict.options is defined %} {{ restrict.options | join(' ') }}{% endif %}
+
+{% endfor %}
+
+{% for server in time_servers %}
+server {{ server }}
+
+{% endfor %}
+
+{% for fudge in time_ntpd_fudges %}
+server {{ fudge.hostname }}
+fudge {{ fudge.hostname }} stratum {{ fudge.stratum }}
+
+{% endfor %}
+
+includefile {{ time_ntpd_includefile }}
+
+keys {{ time_ntpd_keys }}
+
+{% if time_ntpd_trustedkey is defined %}
+trustedkey {{ time_ntpd_trustedkey | join(' ') }}
+{% endif %}
+
+{% if time_ntpd_requestkey is defined %}
+requestkey {{ time_ntpd_requestkey }}
+{% endif %}
+
+{% if time_ntpd_controlkey is defined %}
+controlkey {{ time_ntpd_controlkey }}
+{% endif %}
+
+{% if time_ntpd_statistics is defined %}
+statistics {{ time_ntpd_statistics | join(' ') }}
+{% endif %}
+
+{% if time_ntpd_disable | length > 0 %}
+disable {{ time_ntpd_disable | join(' ') }}
+{% endif %}

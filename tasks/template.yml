@@ -1,0 +1,13 @@
+---
+- name: Service name
+  ansible.builtin.set_fact:
+    cacheable: true
+    time_service: "{{ time_backend.service }}"
+
+- name: Configuration file
+  become: true
+  ansible.builtin.template:
+    src: "{{ time_backend.config | basename }}.j2"
+    dest: "{{ time_backend.config }}"
+    mode: 0644
+  notify: service restart

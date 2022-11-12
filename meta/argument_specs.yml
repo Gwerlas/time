@@ -1,0 +1,33 @@
+---
+argument_specs:
+  main:
+    short_description: The main entry point which install, configure and update the node.
+    options:
+      time_backend_name:
+        choices:
+          - chrony
+          - ntp
+          - timesync
+        description: Name of the backend to apply.
+      time_backend_fallback:
+        choices:
+          - chrony
+          - ntp
+          - timesync
+        default: chrony
+        description: Name of the backend to apply in case of failure.
+  apply:
+    short_description: Apply a time backend on the node.
+    options:
+      time_backend:
+        required: true
+        type: dict
+        description: Time backend configuration.
+      time_servers:
+        type: list
+        elements: str
+        default: empty
+        description: List of NTP servers, no config changes if empty.
+      time_zone:
+        default: undefined
+        description: Timezone name (eg. 'Europe/Paris'), no change if undefined.

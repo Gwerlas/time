@@ -1,0 +1,11 @@
+---
+time_backend_default: timesync
+time_backends:
+  chrony:
+    config: /etc/chrony.conf
+    package: chrony
+    service: chronyd
+  timesync:
+    config: /etc/systemd/timesyncd.conf
+    package: systemd-timesyncd
+    service: systemd-timesyncd.service

@@ -1,0 +1,56 @@
+---
+# Run `timedatectl list-timezones` to display available time zones
+# time_zone: Europe/Paris
+
+# List of NTP servers, distro file kept if empty
+time_servers: []
+
+# Name of the time backend to use (chrony, ntpd or timesync)
+# time_backend_name: timesync
+
+#############
+# NTPd only #
+#############
+
+time_ntpd_driftfile: /var/lib/ntp/drift
+time_ntpd_includefile: /etc/ntp/crypto/pw
+
+# Key file containing the keys and key identifiers used when operating
+# with symmetric key cryptography.
+time_ntpd_keys: /etc/ntp/keys
+
+# Permit time synchronization with our time source, but do not
+# permit the source to query or modify the service on this system.
+time_ntpd_restrict_defaults:
+  - nomodify
+  - notrap
+  - nopeer
+  - noquery
+
+# Permit all access over the loopback interface.  This could
+# be tightened as well, but to do so would effect some of
+# the administrative functions.
+time_ntpd_restricts:
+  - ip: '127.0.0.1'
+  - ip: '::1'
+
+time_ntpd_fudges: []
+
+# Specify the key identifiers which are trusted.
+# time_ntpd_trustedkey: [4, 8, 42]
+
+# Specify the key identifier to use with the ntpdc utility.
+# time_ntpd_requestkey: 8
+
+# Specify the key identifier to use with the ntpq utility.
+# time_ntpd_controlkey: 8
+
+# Enable writing of statistics records.
+# time_ntpd_statistics: ['clockstats', 'cryptostats', 'loopstats', 'peerstats']
+
+# Disable the monitoring facility to prevent amplification attacks using ntpdc
+# monlist command when default restrict does not include the noquery flag. See
+# CVE-2013-5211 for more details.
+# Note: Monitoring will not be disabled with the limited restriction flag.
+time_ntpd_disable:
+  - monitor

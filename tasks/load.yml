@@ -1,0 +1,16 @@
+---
+- name: Variables
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distribution | lower }}{{ ansible_distribution_major_version }}.yml"    # debian10
+        - "{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}.yml" # ubuntu-bionic
+        - "{{ ansible_distribution | lower }}.yml"                                            # fedora
+        - "{{ ansible_os_family | lower }}{{ ansible_distribution_major_version }}-like.yml"  # redhat7-like
+        - "{{ ansible_os_family | lower }}-{{ ansible_distribution_release | lower }}.yml"    # redhat-stream
+        - "{{ ansible_os_family | lower }}-like.yml"                                          # debian-like,  redhat-like
+        - "{{ ansible_service_mgr }}.yml"                                                     # openrc,       systemd
+        - other.yml
+      paths:
+        - vars

@@ -1,0 +1,32 @@
+---
+- name: Zone
+  when: time_zone is defined
+  become: true
+  community.general.timezone:
+    name: "{{ time_zone }}"
+
+- name: Configuration file
+  when: time_servers | length > 0
+  ansible.builtin.include_tasks: template.yml
+
+- name: Package
+  become: true
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: "{{ 'present' if item == (time_backend.package | default('')) else 'absent' }}"
+  loop: "{{ time_backends.values() | selectattr('package', 'defined') | map(attribute='package') }}"
+
+- name: Just at boot
+  when: "'at_boot' in time_backend"
+  become: true
+  ansible.builtin.service:
+    name: "{{ time_backend.at_boot }}"
+    state: started
+    enabled: true
+
+- name: Service
+  become: true
+  ansible.builtin.service:
+    name: "{{ time_backend.service }}"
+    state: started
+    enabled: true

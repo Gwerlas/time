@@ -1,0 +1,8 @@
+---
+- name: Verify role with NTP servers
+  hosts: all
+  tasks:
+    - name: NTP Server
+      ansible.builtin.command:
+        cmd: chronyc sourcestats
+      changed_when: false
